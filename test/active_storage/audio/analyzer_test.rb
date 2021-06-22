@@ -19,7 +19,7 @@ module ActiveStorage
       end
 
       test 'metadata' do
-        keys = %i[duration bit_rate sample_rate channels channel_layout]
+        keys = %i[duration bit_rate sample_rate channels channel_layout format_name tags]
 
         assert_equal keys, @analyzer.metadata.keys
       end
@@ -46,6 +46,21 @@ module ActiveStorage
 
       test 'channel layout' do
         assert_equal 'stereo', @analyzer.channel_layout
+      end
+
+      test 'format name' do
+        assert_equal 'mp3', @analyzer.format_name
+      end
+
+      test 'tags' do
+        tags = {
+          "title" => 'da capo',
+          "artist" => 'listerine dreams',
+          "comment" => 'Visit http://listerinedreams.bandcamp.com',
+          "date" => '2018'
+        }
+
+        assert_equal tags, @analyzer.tags
       end
     end
   end

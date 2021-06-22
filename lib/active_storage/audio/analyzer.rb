@@ -24,7 +24,9 @@ module ActiveStorage
           sample_rate: sample_rate,
           codec: codec,
           channels: channels,
-          channel_layout: channel_layout
+          channel_layout: channel_layout,
+          format_name: format_name,
+          tags: tags
         }.compact
       end
 
@@ -70,6 +72,21 @@ module ActiveStorage
         stream['channel_layout']
       end
 
+      # Format name for the file, e.g. `flac`
+      #
+      # @return [String]
+      def format_name
+        format_data['format_name']
+      end
+
+      # Tags of the file that can include data
+      # like artist, title or album.
+      #
+      # @return [Hash]
+      def tags
+        format_data['tags']
+      end
+
       private
 
       # @private
@@ -89,11 +106,18 @@ module ActiveStorage
       end
 
       # @private
+      # @return [Hash] The first format found in the search.
+      def format_data
+        probe['format']
+      end
+
+      # @private
       # @return [String] Output of the `ffprobe` command execution.
       def command(path)
         [
           ffprobe,
           '-show_streams',
+          '-show_format',
           '-v',
           'error',
           '-print_format',
